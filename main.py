@@ -90,9 +90,9 @@ class Spaceship:
 
 
 def main():
-    ship = Spaceship(640, 640)
+    ship = Spaceship(screen.get_width() // 2, screen.get_height() // 2)
     all_asteroids = []
-    for i in range(100):
+    for i in range(1000):
         asteroid = Asteroid(random.randint(-5000, 5000), random.randint(-5000, 5000), random.randint(20, 50))
         all_asteroids.append(asteroid)
 
