@@ -86,7 +86,8 @@ class Spaceship:
             int(x + math.cos(self.angle - math.pi * 1.25) * self.size / 1.3), int(y + math.sin(self.angle - math.pi * 1.25) * self.size / 1.3)
         )
         self.invulnerable = True
-        self.activate_at = pygame.time.get_ticks() + 1000
+        self.invulnerable_duration = 1500
+        self.activate_at = pygame.time.get_ticks() + self.invulnerable_duration
 
     def update(self, deltatime):
         self.deltapos += self.direction * self.acceleration
@@ -107,9 +108,10 @@ class Spaceship:
                 self.invulnerable = False
         else:
             self.invulnerable = True
-            self.activate_at = pygame.time.get_ticks() + 1000
+            self.activate_at = pygame.time.get_ticks() + self.invulnerable_duration
             self.lives -= 1
             print(f"Crash! Lives: {self.lives}")
+
             if self.lives <= 0:
                 global running
                 running = False
