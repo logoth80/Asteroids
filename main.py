@@ -14,7 +14,7 @@ halfy = SCREEN_HEIGHT // 2
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Spaceship Game")
-world_radius = 5000
+world_radius = 15000
 running = True
 
 
@@ -31,8 +31,16 @@ class Asteroid:
         self.position = Vector2(x, y)
         self.radius = radius
         self.radiussquared = radius**2
+        # points around position creating asteroid.
+        self.point = []
+        for alpha in range(0, 360, 30):
+            alpha_rad = math.radians(alpha)
+            self.point.append(Vector2(self.radius * math.cos(alpha_rad), self.radius * math.sin(alpha_rad)) * random.uniform(0.8, 1.2))
+        self.pointlength = len(self.point)
+        # brown
+        self.color = (150, 75, 0)
 
-    def update(self, screenhalfx, screenhalfy, spaceshipx, spaceshipy, ship):
+    def update(self, screen, screenhalfx, screenhalfy, spaceshipx, spaceshipy, ship):
         if (
             self.position.x - self.radius > spaceshipx + screenhalfx
             or self.position.x + self.radius < spaceshipx - screenhalfx
@@ -40,7 +48,7 @@ class Asteroid:
             or self.position.y + self.radius < spaceshipy - screenhalfx
         ):
             return False
-        self.draw(screenhalfx, screenhalfy, spaceshipx, spaceshipy)
+        self.draw(screen, screenhalfx, screenhalfy, spaceshipx, spaceshipy)
 
         distancesquar_to_spaceship_tip = Vector2.distance_squared_to(self.position, ship.tip)
         if distancesquar_to_spaceship_tip < self.radiussquared:
@@ -54,15 +62,78 @@ class Asteroid:
 
         return True
 
-    def draw(self, screenhalfx, screenhalfy, spaceshipx, spaceshipy):
-        pygame.draw.circle(
+    def draw(self, screen, screenhalfx, screenhalfy, spaceshipx, spaceshipy):
+        # pygame.draw.circle(
+        #     screen,
+        #     BLUE,
+        #     (
+        #         int(self.position.x - spaceshipx + screenhalfx),
+        #         int(self.position.y - spaceshipy + screenhalfy),
+        #     ),
+        #     int(self.radius),
+        # )
+
+        for point in range(1, self.pointlength):
+            # pygame.draw.line(
+            #     screen,
+            #     WHITE,
+            #     (
+            #         int(self.position.x - spaceshipx + screenhalfx + self.point[point - 1].x),
+            #         int(self.position.y - spaceshipy + screenhalfy + self.point[point - 1].y),
+            #     ),
+            #     (
+            #         int(self.position.x - spaceshipx + screenhalfx + self.point[point].x),
+            #         int(self.position.y - spaceshipy + screenhalfy + self.point[point].y),
+            #     ),
+            # )
+            pygame.draw.polygon(
+                screen,
+                self.color,
+                [
+                    (
+                        int(self.position.x - spaceshipx + screenhalfx + self.point[point - 1].x),
+                        int(self.position.y - spaceshipy + screenhalfy + self.point[point - 1].y),
+                    ),
+                    (
+                        int(self.position.x - spaceshipx + screenhalfx + self.point[point].x),
+                        int(self.position.y - spaceshipy + screenhalfy + self.point[point].y),
+                    ),
+                    (
+                        int(self.position.x - spaceshipx + screenhalfx),
+                        int(self.position.y - spaceshipy + screenhalfy),
+                    ),
+                ],
+            )
+
+        # pygame.draw.line(
+        #     screen,
+        #     WHITE,
+        #     (
+        #         int(self.position.x - spaceshipx + screenhalfx + self.point[0].x),
+        #         int(self.position.y - spaceshipy + screenhalfy + self.point[0].y),
+        #     ),
+        #     (
+        #         int(self.position.x - spaceshipx + screenhalfx + self.point[self.pointlength - 1].x),
+        #         int(self.position.y - spaceshipy + screenhalfy + self.point[self.pointlength - 1].y),
+        #     ),
+        # )
+        pygame.draw.polygon(
             screen,
-            WHITE,
-            (
-                int(self.position.x - spaceshipx + screenhalfx),
-                int(self.position.y - spaceshipy + screenhalfy),
-            ),
-            int(self.radius),
+            self.color,
+            [
+                (
+                    int(self.position.x - spaceshipx + screenhalfx + self.point[0].x),
+                    int(self.position.y - spaceshipy + screenhalfy + self.point[0].y),
+                ),
+                (
+                    int(self.position.x - spaceshipx + screenhalfx + self.point[self.pointlength - 1].x),
+                    int(self.position.y - spaceshipy + screenhalfy + self.point[self.pointlength - 1].y),
+                ),
+                (
+                    int(self.position.x - spaceshipx + screenhalfx),
+                    int(self.position.y - spaceshipy + screenhalfy),
+                ),
+            ],
         )
 
 
@@ -144,7 +215,7 @@ class Spaceship:
 def main():
     ship = Spaceship(0, 0)
     all_asteroids = []
-    for i in range(1000):
+    for i in range(10000):
         radius = world_radius * math.sqrt(random.random())
         alpha = random.uniform(0, 2 * math.pi)
         x = radius * math.cos(alpha)
@@ -154,6 +225,8 @@ def main():
 
     clock = pygame.time.Clock()
     global running
+    screenhalfx = screen.get_width() // 2
+    screenhalfy = screen.get_height() // 2
     while running:
         deltatime = clock.get_time() * 0.1
         for event in pygame.event.get():
@@ -167,21 +240,20 @@ def main():
         pygame.draw.circle(screen, WHITE, (halfx, halfy) - ship.position, world_radius + 100, 100)
         ship.update(deltatime)
 
-        screenhalfx = screen.get_width() / 2
-        screenhalfy = screen.get_height() / 2
         shipx = ship.position.x
         shipy = ship.position.y
         drawnasteroids = 0
         for asteroid in all_asteroids:
-            if asteroid.update(screenhalfx, screenhalfy, shipx, shipy, ship):
+            if asteroid.update(screen, screenhalfx, screenhalfy, shipx, shipy, ship):
                 drawnasteroids += 1
         # print("Drawn asteroids:", drawnasteroids)
 
         ship.draw(screen)
         pygame.display.flip()
         clock.tick()
-        if pygame.time.get_ticks() % 1000 == 0:
-            print(f"position: {ship.position}, tip: {ship.tip}")
+        if pygame.time.get_ticks() % 100 == 0:
+            # print(f"position: {ship.position}, tip: {ship.tip}")
+            print(f"fps: {clock.get_fps()}")
 
 
 if __name__ == "__main__":
