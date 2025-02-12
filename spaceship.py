@@ -28,7 +28,7 @@ class Spaceship:
         self.activate_at = pygame.time.get_ticks() + self.invulnerable_duration
 
     def update(self, deltatime):
-        self.deltapos += self.direction * self.acceleration
+        self.deltapos += self.direction * self.acceleration * deltatime
         self.deltapos = self.deltapos.clamp_magnitude(self.maxspeed)
         self.position += self.deltapos * deltatime
         mouse_x, mouse_y = pygame.mouse.get_pos()

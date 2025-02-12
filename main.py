@@ -33,12 +33,12 @@ BLUE = (0, 0, 255)
 def main():
     ship = Spaceship(0, 0)
     all_asteroids = []
-    for i in range(6000):
+    for i in range(7000):
         radius = world_radius * math.sqrt(random.random())
         alpha = random.uniform(0, 2 * math.pi)
         x = radius * math.cos(alpha)
         y = radius * math.sin(alpha)
-        one_asteroid = Asteroid(x, y, random.randint(20, 50))
+        one_asteroid = Asteroid(x, y, random.randint(15, 90))
         all_asteroids.append(one_asteroid)
 
     clock = pygame.time.Clock()
@@ -67,16 +67,16 @@ def main():
             if asteroid.update(screen, screenhalfx, screenhalfy, shipx, shipy, ship):
                 drawnasteroids += 1
         # print("Drawn asteroids:", drawnasteroids)
-        osd.draw(ship)
+        fps = clock.get_fps()
+        osd.draw(ship, fps)
         ship.draw(screen)
         if ship.lives <= 0:
             running = False
 
         pygame.display.flip()
         clock.tick()
-        if pygame.time.get_ticks() % 100 == 0:
-            # print(f"position: {ship.position}, tip: {ship.tip}")
-            print(f"fps: {clock.get_fps()}")
+
+    pygame.quit()
 
 
 if __name__ == "__main__":
