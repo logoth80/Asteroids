@@ -4,6 +4,7 @@ import math
 import random
 from asteroid import Asteroid
 from spaceship import Spaceship
+from osd import OSD
 
 
 # Initialize Pygame
@@ -32,7 +33,7 @@ BLUE = (0, 0, 255)
 def main():
     ship = Spaceship(0, 0)
     all_asteroids = []
-    for i in range(10000):
+    for i in range(6000):
         radius = world_radius * math.sqrt(random.random())
         alpha = random.uniform(0, 2 * math.pi)
         x = radius * math.cos(alpha)
@@ -41,6 +42,8 @@ def main():
         all_asteroids.append(one_asteroid)
 
     clock = pygame.time.Clock()
+    osd = OSD(screen)
+
     global running
     screenhalfx = screen.get_width() // 2
     screenhalfy = screen.get_height() // 2
@@ -64,8 +67,11 @@ def main():
             if asteroid.update(screen, screenhalfx, screenhalfy, shipx, shipy, ship):
                 drawnasteroids += 1
         # print("Drawn asteroids:", drawnasteroids)
-
+        osd.draw(ship)
         ship.draw(screen)
+        if ship.lives <= 0:
+            running = False
+
         pygame.display.flip()
         clock.tick()
         if pygame.time.get_ticks() % 100 == 0:

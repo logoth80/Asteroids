@@ -50,10 +50,6 @@ class Spaceship:
             self.lives -= 1
             print(f"Crash! Lives: {self.lives}")
 
-            if self.lives <= 0:
-                global running
-                running = False
-
     def draw(self, screen):
         # Calculate the three points of the triangle
         x = 640
