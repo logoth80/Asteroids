@@ -20,19 +20,19 @@ class Asteroid:
         self.color = (150, 75, 0)
         self.invisible = True
 
-    def check_visible(self, screenhalfx, screenhalfy, spaceshipx, spaceshipy):
+    def check_visible(self, shipxleft, shipxright, shipytop, shipybottom):
         if (
-            self.position.x - self.radiusextended > spaceshipx + screenhalfx
-            or self.position.x + self.radiusextended < spaceshipx - screenhalfx
-            or self.position.y - self.radiusextended > spaceshipy + screenhalfy
-            or self.position.y + self.radiusextended < spaceshipy - screenhalfx
-        ):
+            self.position.x - self.radiusextended > shipxright
+            or self.position.x + self.radiusextended < shipxleft
+            or self.position.y - self.radiusextended > shipybottom
+            or self.position.y + self.radiusextended < shipytop
+            ):
             self.invisible = True
             return False
         self.invisible = False
         return True
 
-    def update(self, screen, screenhalfx, screenhalfy, spaceshipx, spaceshipy, ship):
+    def update(self, screen, screenhalfx, screenhalfy, spaceshipx, spaceshipy, ship, clock):
         if self.invisible:
             return False
 
@@ -40,15 +40,15 @@ class Asteroid:
 
         distancesquar_to_spaceship_tip = Vector2.distance_squared_to(self.position, ship.tip)
         if distancesquar_to_spaceship_tip < self.radiussquared:
-            ship.crash(ship.tip)
+            ship.crash(clock)
             return True
         distancesquar_to_spaceship_left = Vector2.distance_squared_to(self.position, ship.left)
         if distancesquar_to_spaceship_left < self.radiussquared:
-            ship.crash(ship.left)
+            ship.crash(clock)
             return True
         distancesquar_to_spaceship_right = Vector2.distance_squared_to(self.position, ship.right)
         if distancesquar_to_spaceship_right < self.radiussquared:
-            ship.crash(ship.right)
+            ship.crash(clock)
 
         return True
 

@@ -18,7 +18,9 @@ halfy = SCREEN_HEIGHT // 2
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Spaceship Game")
-world_radius = 15000
+world_radius = 60000
+total_asteroids = 160000
+
 running = True
 
 
@@ -33,7 +35,7 @@ BLUE = (0, 0, 255)
 def main():
     ship = Spaceship(0, 0)
     all_asteroids = []
-    for i in range(15000):
+    for i in range(total_asteroids):
         radius = world_radius * math.sqrt(random.random())
         alpha = random.uniform(0, 2 * math.pi)
         x = radius * math.cos(alpha)
@@ -72,11 +74,15 @@ def main():
 
         start_index = (iteration % chunks_for_visibility) * chunk_size
         end_index = min(start_index + chunk_size, totalasteroids)
+        shipxleft=shipx-screenhalfx
+        shipxright=shipx+screenhalfx
+        shipytop=shipy-screenhalfy
+        shipybottom=shipy+screenhalfy
         for i in range(start_index, end_index):
-            all_asteroids[i].check_visible(screenhalfx, screenhalfy, shipx, shipy)
+            all_asteroids[i].check_visible(shipxleft, shipxright, shipytop, shipybottom)
         for asteroid in all_asteroids:
             if not asteroid.invisible:
-                asteroid.update(screen, screenhalfx, screenhalfy, shipx, shipy, ship)
+                asteroid.update(screen, screenhalfx, screenhalfy, shipx, shipy, ship, clock)
                 drawnasteroids += 1
 
         iteration = (iteration + 1) % chunks_for_visibility
@@ -96,3 +102,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+

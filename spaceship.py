@@ -40,16 +40,19 @@ class Spaceship:
             if self.activate_at <= pygame.time.get_ticks():
                 self.invulnerable = False
 
-    def crash(self, collisionpos):
+    def crash(self, clock):
         if self.invulnerable:
             if self.activate_at <= pygame.time.get_ticks():
                 self.invulnerable = False
         else:
             self.invulnerable = True
+            for i in range(1000):
+                pygame.time.delay(1)
+                clock.tick()
+
             self.activate_at = pygame.time.get_ticks() + self.invulnerable_duration
             self.lives -= 1
             print(f"Crash! Lives: {self.lives}")
-
     def draw(self, screen):
         # Calculate the three points of the triangle
         x = 640
