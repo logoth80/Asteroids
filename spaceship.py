@@ -2,10 +2,8 @@ import pygame
 import math
 from pygame.math import Vector2
 
-
-# Spaceship class
 class Spaceship:
-    def __init__(self, x, y):
+    def __init__(self, x, y, halfscreenx, halfscreeny):
         self.color = (255, 255, 255)
         self.position = Vector2(x, y)
         self.direction = Vector2(0, 1)
@@ -16,6 +14,8 @@ class Spaceship:
         self.maxspeed = 3
         self.acceleration = 0.1
         self.lives = 3
+        self.halfscreenx = halfscreenx
+        self.halfscreeny = halfscreeny
         self.tip = Vector2(int(x + math.cos(self.angle) * self.size), int(y + math.sin(self.angle) * self.size))
         self.left = Vector2(
             int(x + math.cos(self.angle + math.pi * 1.25) * self.size / 1.3), int(y + math.sin(self.angle + math.pi * 1.25) * self.size / 1.3)
@@ -54,9 +54,9 @@ class Spaceship:
             self.lives -= 1
             print(f"Crash! Lives: {self.lives}")
     def draw(self, screen):
-        # Calculate the three points of the triangle
-        x = 640
-        y = 640
+        # Calculate the three points of the ship
+        x = self.halfscreenx
+        y = self.halfscreeny
         angle = self.angle
         tip_x = int(x + math.cos(angle) * self.size)
         tip_y = int(y + math.sin(angle) * self.size)

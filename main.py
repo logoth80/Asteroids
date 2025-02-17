@@ -6,11 +6,8 @@ from asteroid import Asteroid
 from spaceship import Spaceship
 from osd import OSD
 
-
-# Initialize Pygame
 pygame.init()
 
-# Screen dimensions
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 1280
 halfx = SCREEN_WIDTH // 2
@@ -23,17 +20,14 @@ total_asteroids = 160000
 
 running = True
 
-
-# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-
 def main():
-    ship = Spaceship(0, 0)
+    ship = Spaceship(0, 0, halfx, halfy)
     all_asteroids = []
     for i in range(total_asteroids):
         radius = world_radius * math.sqrt(random.random())
