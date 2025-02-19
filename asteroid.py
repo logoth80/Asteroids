@@ -3,7 +3,6 @@ import math
 import random
 from pygame.math import Vector2
 
-
 class Asteroid:
     def __init__(self, x, y, radius):
         self.position = Vector2(x, y)
