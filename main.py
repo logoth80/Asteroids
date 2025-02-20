@@ -68,10 +68,10 @@ def main():
 
         start_index = (iteration % chunks_for_visibility) * chunk_size
         end_index = min(start_index + chunk_size, totalasteroids)
-        shipxleft=shipx-screenhalfx
-        shipxright=shipx+screenhalfx
-        shipytop=shipy-screenhalfy
-        shipybottom=shipy+screenhalfy
+        shipxleft=shipx-screenhalfx-100
+        shipxright=shipx+screenhalfx+100
+        shipytop=shipy-screenhalfy-100
+        shipybottom=shipy+screenhalfy+100
         for i in range(start_index, end_index):
             all_asteroids[i].check_visible(shipxleft, shipxright, shipytop, shipybottom)
         for asteroid in all_asteroids:

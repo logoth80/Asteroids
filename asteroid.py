@@ -11,7 +11,7 @@ class Asteroid:
         self.radiussquared = radius**2
         # points around position creating asteroid.
         self.point = []
-        for alpha in range(0, 360, 30):
+        for alpha in range(0, 360, 20):
             alpha_rad = math.radians(alpha)
             self.point.append(Vector2(self.radius * math.cos(alpha_rad), self.radius * math.sin(alpha_rad)) * random.uniform(0.8, 1.2))
         self.pointlength = len(self.point)
@@ -21,10 +21,10 @@ class Asteroid:
 
     def check_visible(self, shipxleft, shipxright, shipytop, shipybottom):
         if (
-            self.position.x - self.radiusextended > shipxright
-            or self.position.x + self.radiusextended < shipxleft
-            or self.position.y - self.radiusextended > shipybottom
-            or self.position.y + self.radiusextended < shipytop
+            self.position.x  > shipxright
+            or self.position.x < shipxleft
+            or self.position.y > shipybottom
+            or self.position.y < shipytop
             ):
             self.invisible = True
             return False
@@ -61,6 +61,8 @@ class Asteroid:
         #     ),
         #     int(self.radius),
         # )
+        screenright=spaceshipx-screenhalfx
+        screenbottom=spaceshipy-screenhalfy
 
         for point in range(1, self.pointlength):
             # pygame.draw.line(
@@ -80,16 +82,16 @@ class Asteroid:
                 self.color,
                 [
                     (
-                        int(self.position.x - spaceshipx + screenhalfx + self.point[point - 1].x),
-                        int(self.position.y - spaceshipy + screenhalfy + self.point[point - 1].y),
+                        int(self.position.x - screenright + self.point[point - 1].x),
+                        int(self.position.y - screenbottom + self.point[point - 1].y),
                     ),
                     (
-                        int(self.position.x - spaceshipx + screenhalfx + self.point[point].x),
-                        int(self.position.y - spaceshipy + screenhalfy + self.point[point].y),
+                        int(self.position.x - screenright + self.point[point].x),
+                        int(self.position.y - screenbottom  + self.point[point].y),
                     ),
                     (
-                        int(self.position.x - spaceshipx + screenhalfx),
-                        int(self.position.y - spaceshipy + screenhalfy),
+                        int(self.position.x - screenright),
+                        int(self.position.y - screenbottom),
                     ),
                 ],
             )
@@ -111,16 +113,16 @@ class Asteroid:
             self.color,
             [
                 (
-                    int(self.position.x - spaceshipx + screenhalfx + self.point[0].x),
-                    int(self.position.y - spaceshipy + screenhalfy + self.point[0].y),
+                    int(self.position.x - screenright + self.point[0].x),
+                    int(self.position.y - screenbottom + self.point[0].y),
                 ),
                 (
-                    int(self.position.x - spaceshipx + screenhalfx + self.point[self.pointlength - 1].x),
-                    int(self.position.y - spaceshipy + screenhalfy + self.point[self.pointlength - 1].y),
+                    int(self.position.x - screenright + self.point[self.pointlength - 1].x),
+                    int(self.position.y - screenbottom + self.point[self.pointlength - 1].y),
                 ),
                 (
-                    int(self.position.x - spaceshipx + screenhalfx),
-                    int(self.position.y - spaceshipy + screenhalfy),
+                    int(self.position.x - screenright),
+                    int(self.position.y - screenbottom),
                 ),
             ],
         )
